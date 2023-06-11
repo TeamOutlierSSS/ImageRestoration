@@ -1,0 +1,24 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  /* background-color: tomato; */
+  height: 10vh;
+  width: 100%;
+  top: 0;
+  border-bottom: 1px solid #778ca3;
+}
+
+.navItem {
+  margin-left: 10px;
+}
+
+.navItem a {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  font-size: 30px;
+}
+
+.navItem a svg {
+  margin-right: 8px; /* Adjust the spacing between the icon and text */
+}

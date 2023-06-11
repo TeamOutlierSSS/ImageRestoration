@@ -1,0 +1,135 @@
+.container {
+  display: flex;
+  /* background-color: #d1d8e0; */
+  margin: 50px 30px;
+  height: 65vh;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.imageContainer {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  width: 50%;
+  height: 100%;
+}
+
+/* .imageContainer:first-child {
+    background-color: teal;
+}
+
+.imageContainer:last-child {
+    background-color: tomato;
+} */
+
+input {
+  display: none;
+}
+
+label {
+  display: flex;
+}
+
+label:hover {
+  color: #673fd7;
+  transition: color 0.2s ease;
+  cursor: pointer;
+}
+
+.image_title {
+  padding: 10px;
+}
+
+.placeholder {
+  font-weight: 600;
+}
+
+.img_wrapper {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.img_wrapper img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: cover;
+}
+
+.img_dne {
+  background-color: white;
+  border-radius: 5px;
+  height: 98%;
+  width: 100%;
+  border: 2px dashed #a5b1c2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.img_dne_text {
+  color: #4b6584;
+}
+
+.btn_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.download_btn {
+  background-image: linear-gradient(
+    92.88deg,
+    #455eb5 9.16%,
+    #5643cc 43.89%,
+    #673fd7 64.72%
+  );
+  border-radius: 8px;
+  border-style: none;
+  box-sizing: border-box;
+  color: #ffffff;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-family: 'Inter UI', 'SF Pro Display', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+    sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  height: 3rem;
+  padding: 0 1.6rem;
+  text-shadow: rgba(0, 0, 0, 0.25) 0 3px 8px;
+  transition: all 0.5s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.download_btn:hover {
+  box-shadow: rgba(80, 63, 205, 0.5) 0 1px 30px;
+  transition-duration: 0.1s;
+}
+
+@media (min-width: 768px) {
+  .download_btn {
+    padding: 0 2.6rem;
+  }
+}
+
+.download_btn span {
+  align-items: center;
+  justify-content: center;
+}
+
+.upload_icon {
+  margin-right: 5px;
+}
+.btn_icon {
+  margin-right: 10px;
+}
