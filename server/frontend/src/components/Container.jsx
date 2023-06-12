@@ -3,11 +3,9 @@ import '../styles/container.css';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faFileArrowDown,
-  faArrowUpFromBracket,
-} from '@fortawesome/free-solid-svg-icons';
+import { faFileArrowDown, faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import Loading from './Loading';
 const Container = () => {
   const [userImage, setUserImage] = useState(null);
   const [processedImage, setProcessedImage] = useState(null);
@@ -29,22 +27,21 @@ const Container = () => {
       var config = {
         headers: {
           'Content-Type': 'multipart/form-data',
-          "Access-Control-Allow-Origin": "*",
-        }
-      }
-      console.log(formData.get('image'))
+          'Access-Control-Allow-Origin': '*',
+        },
+      };
+
       const response = await axios.post('/api/upload', formData, config);
 
-      if (response.ok) {
-        const processedImageUrl = await response.json();
-        setProcessedImage(processedImageUrl);
+      if (response.status === 200) {
+        const processedImageUrl = await response.data.fileName;
+        setProcessedImage(`img/${processedImageUrl}`);
       } else {
         console.error('Image upload failed');
       }
     } catch (error) {
       console.error('Image upload failed', error);
     }
-
     setLoading(false);
   };
 
@@ -52,6 +49,8 @@ const Container = () => {
     <div className='layout'>
       <Header />
       <main>
+        {/* WIP - loader */}
+        {loading && <Loading />}
         <div className='container'>
           <div className='imageContainer'>
             <div className='img_title'>
@@ -62,19 +61,11 @@ const Container = () => {
                 <img src={userImage} alt='User Uploaded' />
               ) : (
                 <label htmlFor='image' className='img_dne'>
-                  <FontAwesomeIcon
-                    icon={faArrowUpFromBracket}
-                    className='upload_icon'
-                  />
+                  <FontAwesomeIcon icon={faArrowUpFromBracket} className='upload_icon' />
                   Upload Your Image Here
                 </label>
               )}
-              <input
-                type='file'
-                accept='image/*'
-                onChange={handleImageUpload}
-                id='image'
-              />
+              <input type='file' accept='image/*' onChange={handleImageUpload} id='image' />
             </div>
           </div>
 
@@ -101,17 +92,9 @@ const Container = () => {
               Download
             </a>
           )}
-
-          {/* this is only for the test -> will be deleted */}
-          <a className='download_btn' href={processedImage} download>
-            <FontAwesomeIcon icon={faFileArrowDown} className='btn_icon' />
-            Download
-          </a>
         </div>
-
-        {/* WIP - loader */}
-        {loading && <div>Loading...</div>}
       </main>
+
       <Footer />
     </div>
   );

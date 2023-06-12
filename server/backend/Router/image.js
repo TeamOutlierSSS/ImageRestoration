@@ -15,7 +15,8 @@ const upload = multer({
   limits: { fileSize: 100000000000 },
 });
 
-router.post('/', upload.single('image'), function (req, res, next) {
+router.post('/', upload.single('image'), async function (req, res, next) {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   res.send({
     fileName: req.file.filename,
   });
