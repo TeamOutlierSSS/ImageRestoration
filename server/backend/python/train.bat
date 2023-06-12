@@ -1,0 +1,1 @@
+python basicsr/train.py -opt options/train/RestoreNet/RestoreNet-width64.yml
