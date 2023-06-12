@@ -7,7 +7,7 @@ import {
   faFileArrowDown,
   faArrowUpFromBracket,
 } from '@fortawesome/free-solid-svg-icons';
-
+import axios from 'axios';
 const Container = () => {
   const [userImage, setUserImage] = useState(null);
   const [processedImage, setProcessedImage] = useState(null);
@@ -26,10 +26,14 @@ const Container = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
+      var config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          "Access-Control-Allow-Origin": "*",
+        }
+      }
+      console.log(formData.get('image'))
+      const response = await axios.post('/api/upload', formData, config);
 
       if (response.ok) {
         const processedImageUrl = await response.json();
