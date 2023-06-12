@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileArrowDown, faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import Loading from './Loading';
+
 const Container = () => {
   const [userImage, setUserImage] = useState(null);
   const [processedImage, setProcessedImage] = useState(null);
@@ -24,7 +25,7 @@ const Container = () => {
     setLoading(true);
 
     try {
-      var config = {
+      let config = {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Access-Control-Allow-Origin': '*',
@@ -35,7 +36,7 @@ const Container = () => {
 
       if (response.status === 200) {
         const processedImageUrl = await response.data.fileName;
-        setProcessedImage(`img/${processedImageUrl}`);
+        setProcessedImage(processedImageUrl);
       } else {
         console.error('Image upload failed');
       }
@@ -43,6 +44,11 @@ const Container = () => {
       console.error('Image upload failed', error);
     }
     setLoading(false);
+  };
+
+  const handleDownloadBtn = (filePath) => {
+    axios.get(`/api/download/${filePath}`);
+    window.location.assign(`/api/download/${filePath}`);
   };
 
   return (
@@ -75,7 +81,7 @@ const Container = () => {
             </div>
             <div className='img_wrapper'>
               {processedImage ? (
-                <img src={processedImage} alt='Processed' />
+                <img src={`img/${processedImage}`} alt='Processed' />
               ) : (
                 <div className='img_dne'>
                   <span className='img_dne_text'>No Processed Image Found</span>
@@ -86,11 +92,23 @@ const Container = () => {
         </div>
 
         <div className='btn_container'>
-          {processedImage && (
-            <a className='download_btn' href={processedImage} download>
+          {/* {processedImage && (
+            <a
+              download
+              className='download_btn'
+              href={process.env.PUBLIC_URL + `public/img/${processedImage}`}
+              target='_blank'
+              rel='noreferrer'
+            >
               <FontAwesomeIcon icon={faFileArrowDown} className='btn_icon' />
               Download
             </a>
+          )} */}
+          {processedImage && (
+            <button className='download_btn' onClick={() => handleDownloadBtn(processedImage)}>
+              <FontAwesomeIcon icon={faFileArrowDown} className='btn_icon' />
+              Download
+            </button>
           )}
         </div>
       </main>
