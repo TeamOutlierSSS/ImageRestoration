@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import '../styles/container.css';
-import { Header } from './Header';
-import { Footer } from './Footer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileArrowDown, faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
@@ -53,15 +51,11 @@ const Container = () => {
 
   return (
     <div className='layout'>
-      <Header />
       <main>
-        {/* WIP - loader */}
         {loading && <Loading />}
         <div className='container'>
           <div className='imageContainer'>
-            <div className='img_title'>
-              <span className='placeholder'>Uploaded Image</span>
-            </div>
+              <span className='img_title'>Uploaded Image</span>
             <div className='img_wrapper'>
               {userImage ? (
                 <img src={userImage} alt='User Uploaded' />
@@ -76,9 +70,7 @@ const Container = () => {
           </div>
 
           <div className='imageContainer'>
-            <div className='img_title'>
-              <span className='placeholder'>Processed Image</span>
-            </div>
+              <span className='img_title'>Processed Image</span>
             <div className='img_wrapper'>
               {processedImage ? (
                 <img src={`img/${processedImage}`} alt='Processed' />
@@ -92,18 +84,6 @@ const Container = () => {
         </div>
 
         <div className='btn_container'>
-          {/* {processedImage && (
-            <a
-              download
-              className='download_btn'
-              href={process.env.PUBLIC_URL + `public/img/${processedImage}`}
-              target='_blank'
-              rel='noreferrer'
-            >
-              <FontAwesomeIcon icon={faFileArrowDown} className='btn_icon' />
-              Download
-            </a>
-          )} */}
           {processedImage && (
             <button className='download_btn' onClick={() => handleDownloadBtn(processedImage)}>
               <FontAwesomeIcon icon={faFileArrowDown} className='btn_icon' />
@@ -113,7 +93,6 @@ const Container = () => {
         </div>
       </main>
 
-      <Footer />
     </div>
   );
 };

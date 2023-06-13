@@ -3,8 +3,10 @@ import '../styles/loading.css';
 
 const Loading = () => {
   return (
-    <div className='loader_container'>
-      <span className='loader'></span>
+    <div className="loading-overlay">
+      <div className='loader_container'>
+        <span className='loader'></span>
+      </div>
     </div>
   );
 };

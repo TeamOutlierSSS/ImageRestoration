@@ -1,7 +1,6 @@
 .navbar {
   display: flex;
   align-items: center;
-  /* background-color: tomato; */
   height: 10vh;
   width: 100%;
   top: 0;
@@ -9,7 +8,7 @@
 }
 
 .navItem {
-  margin-left: 10px;
+  margin-left: 15px;
 }
 
 .navItem a {
@@ -20,5 +19,5 @@
 }
 
 .navItem a svg {
-  margin-right: 8px; /* Adjust the spacing between the icon and text */
+  margin-right: 8px;
 }
