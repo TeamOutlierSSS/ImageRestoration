@@ -33,7 +33,7 @@ This will install required modules for python.
 This will set basicsr modules for inference.
 
 
-- Download the pretrained weights at `TODO`\
+- Download the pretrained weights [(Link)](https://drive.google.com/drive/folders/1vioBTsrzYxiXOEdy4NwGCzUH--Hrn6Eg)\
 You will need this pretained models for inference.\
 Put these pretained models in `server/backend/python/experiments/pretrained_models`.\
 Make directory if you cannot find folders.
