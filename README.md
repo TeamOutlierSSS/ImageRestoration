@@ -1,11 +1,8 @@
 ![header](https://capsule-render.vercel.app/api?type=soft&color=0:e66465,100:9198e5&height=200&section=header&text=Image%20Restoration&fontSize=70&animation=fadeIn&fontColor=ffffff)
 
 
-<img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=flat&logo=react&logoColor=white"/>
-<img src="https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black"/>
-<img src="https://img.shields.io/badge/NodeJS-339933?style=flat&logo=nodedotjs&logoColor=white"/>
-<img src="https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white"/>
-<img src="https://img.shields.io/badge/Javascript-F7DF1E?style=flat&logo=javascript&logoColor=black"/>
+<img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=flat&logo=react&logoColor=white"/> <img src="https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black"/> <img src="https://img.shields.io/badge/NodeJS-339933?style=flat&logo=nodedotjs&logoColor=white"/>
+<img src="https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white"/> <img src="https://img.shields.io/badge/Javascript-F7DF1E?style=flat&logo=javascript&logoColor=black"/>
 
 
 <br>
@@ -14,12 +11,14 @@
 
 # <img src="server/frontend/public/favicon3.svg" height=20 width=20> Introduction
 
-### Major Challenge
-- We found that there is an active research for denoising or deblurring seperately, but there are few attempts to address
-  the issue of image deblurring and denoising of same image, which is common in real life.
+### Background
+- The two tasks, Deblur and Denoise, are processed based on opposite principles.
+  - In the Deblur task, the process of removing blur enhances the edges of the image, making noise more visible.
+  - In the Denoise task, the process of removing noise softens the edges of the image, making them appear smoother or less defined, resembling a blur.
+- We found that there is an active research for denoising or deblurring seperately, but there are few attempts to address the issue of image deblurring and denoising of same image, which is common in real life.
 
 ### Main features
-- Image restoration is a simple web server for image denoising/deblurring at the same time.
+- Implement a simple web server for image denoising/deblurring at the same time.
 
 <br>
 <br>
@@ -27,8 +26,7 @@
 # Service Architecture
 <img src="./docs/service_arch.png" alt="Service Architecture">
 
-## How does this work?
-
+### How does this work?
 We made it as simple as possible, so you will only need to remember three steps.
 
 1. React frontend sends an image file to Express backend using POST.\
