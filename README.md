@@ -1,11 +1,12 @@
-![header](https://capsule-render.vercel.app/api?type=soft&color=auto&height=300&section=header&text=Image%20Restoration&fontSize=90)
+![header](https://capsule-render.vercel.app/api?type=soft&color=0:e66465,100:9198e5&height=200&section=header&text=Image%20Restoration&fontSize=70&animation=fadeIn&fontColor=ffffff)
+
 
 <img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=flat&logo=react&logoColor=white"/>
 <img src="https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black"/>
 <img src="https://img.shields.io/badge/NodeJS-339933?style=flat&logo=nodedotjs&logoColor=white"/>
-<br>
 <img src="https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white"/>
 <img src="https://img.shields.io/badge/Javascript-F7DF1E?style=flat&logo=javascript&logoColor=black"/>
+
 
 <br>
 <br>
@@ -24,6 +25,7 @@
 <br>
 
 # Service Architecture
+<img src="./docs/service_arch.png" alt="Service Architecture">
 
 ## How does this work?
 
@@ -40,12 +42,14 @@ We made it as simple as possible, so you will only need to remember three steps.
 <br>
 
 # Dataset
-
+- BSD-D
+- RealBlur-J
+- RealBlur-tele
 <br>
 <br>
 
 # Model Architecture
-
+<img src="./docs/model_arch.png" alt="Model Architecture">
 <br>
 <br>
 
