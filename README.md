@@ -1,15 +1,15 @@
-![header](https://capsule-render.vercel.app/api?type=soft&color=0:e66465,100:9198e5&height=200&section=header&text=Image%20Restoration&fontSize=70&animation=fadeIn&fontColor=ffffff)
+![header](https://capsule-render.vercel.app/api?type=soft&color=0:e66465,100:9198e5&height=180&section=header&text=Image%20Restoration&fontSize=65&animation=fadeIn&fontColor=ffffff)
 
 
 <img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=flat&logo=react&logoColor=white"/> <img src="https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black"/> <img src="https://img.shields.io/badge/NodeJS-339933?style=flat&logo=nodedotjs&logoColor=white"/>
+
 <img src="https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white"/> <img src="https://img.shields.io/badge/Javascript-F7DF1E?style=flat&logo=javascript&logoColor=black"/>
 
 
 <br>
 <br>
-<br>
 
-# <img src="server/frontend/public/favicon3.svg" height=20 width=20> Introduction
+# Introduction
 
 ### Background
 - The two tasks, Deblur and Denoise, are processed based on opposite principles.
@@ -20,7 +20,6 @@
 ### Main features
 - Implement a simple web server for image denoising/deblurring at the same time.
 
-<br>
 <br>
 
 # Service Architecture
@@ -37,16 +36,15 @@ We made it as simple as possible, so you will only need to remember three steps.
 3. After the inference, backend sends the name of the restored image, and frontend shows it to the client.
 
 <br>
-<br>
 
 # Dataset
-- BSD-D
-- RealBlur-J
-- RealBlur-tele
-<br>
+- BSD [download here](https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/bsds/)
+- RealBlur-J [download here](https://cg.postech.ac.kr/research/realblur/)
+- RealBlur-tele [download here](https://cg.postech.ac.kr/research/realblur/)
+
 <br>
 
-# Model Architecture
+#  Model Architecture
 <img src="./docs/model_arch.png" alt="Model Architecture">
 <br>
 <br>
@@ -99,7 +97,6 @@ npm run start
 - This will start both backend and frontend at the same time with the aid of the module
   **concurrently**.
 
-<br>
 <br>
 
 # Reference
