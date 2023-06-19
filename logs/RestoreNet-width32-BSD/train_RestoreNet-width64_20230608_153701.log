@@ -1,0 +1,167 @@
+2023-06-08 15:37:01,156 INFO: 
+                ____                _       _____  ____
+               / __ ) ____ _ _____ (_)_____/ ___/ / __ \
+              / __  |/ __ `// ___// // ___/\__ \ / /_/ /
+             / /_/ // /_/ /(__  )/ // /__ ___/ // _, _/
+            /_____/ \__,_//____//_/ \___//____//_/ |_|
+     ______                   __   __                 __      __
+    / ____/____   ____   ____/ /  / /   __  __ _____ / /__   / /
+   / / __ / __ \ / __ \ / __  /  / /   / / / // ___// //_/  / /
+  / /_/ // /_/ // /_/ // /_/ /  / /___/ /_/ // /__ / /<    /_/
+  \____/ \____/ \____/ \____/  /_____/\____/ \___//_/|_|  (_)
+    
+Version Information: 
+	BasicSR: 1.2.0+50cb149
+	PyTorch: 2.0.0
+	TorchVision: 0.15.0
+2023-06-08 15:37:01,160 INFO: 
+  name: RestoreNet-width64
+  model_type: ImageRestorationModel
+  scale: 1
+  num_gpu: 1
+  manual_seed: 10
+  datasets:[
+    train:[
+      name: RestoreNet-train
+      type: PairedImageDataset
+      dataroot_gt: D:\Premodel\RestoreNet\train\output
+      dataroot_lq: D:\Premodel\RestoreNet\train\input
+      filename_tmpl: {}
+      io_backend:[
+        type: disk
+      ]
+      gt_size: 256
+      use_flip: True
+      use_rot: True
+      use_shuffle: True
+      num_worker_per_gpu: 2
+      batch_size_per_gpu: 2
+      dataset_enlarge_ratio: 1
+      prefetch_mode: None
+      phase: train
+      scale: 1
+    ]
+    val:[
+      name: RestoreNet-test
+      type: PairedImageDataset
+      dataroot_gt: D:\Premodel\RestoreNet\test\output
+      dataroot_lq: D:\Premodel\RestoreNet\test\input
+      io_backend:[
+        type: disk
+      ]
+      phase: val
+      scale: 1
+    ]
+  ]
+  network_g:[
+    type: RestoreNetLocal
+    width_deblur: 64
+    enc_blk_nums_deblur: [1, 1, 1, 28]
+    middle_blk_num_deblur: 1
+    dec_blk_nums_deblur: [1, 1, 1, 1]
+    dw_expand_deblur: 2
+    ffn_expand_deblur: 2
+    width_denoise: 64
+    enc_blk_nums_denoise: [2, 2, 4, 8]
+    middle_blk_num_denoise: 12
+    dec_blk_nums_denoise: [2, 2, 2, 2]
+    dw_expand_denoise: 2
+    ffn_expand_denoise: 2
+  ]
+  path:[
+    pretrain_network_g: None
+    strict_load_g: True
+    resume_state: experiments/RestoreNet-width64/training_states/100000.state
+    root: d:\premodel\restorenet
+    experiments_root: d:\premodel\restorenet\experiments\RestoreNet-width64
+    models: d:\premodel\restorenet\experiments\RestoreNet-width64\models
+    training_states: d:\premodel\restorenet\experiments\RestoreNet-width64\training_states
+    log: d:\premodel\restorenet\experiments\RestoreNet-width64
+    visualization: d:\premodel\restorenet\experiments\RestoreNet-width64\visualization
+  ]
+  train:[
+    optim_g:[
+      type: AdamW
+      lr: 0.001
+      weight_decay: 0.001
+      betas: [0.9, 0.9]
+    ]
+    scheduler:[
+      type: TrueCosineAnnealingLR
+      T_max: 400000
+      eta_min: 1e-07
+    ]
+    total_iter: 400000
+    warmup_iter: -1
+    pixel_opt:[
+      type: PSNRLoss
+      loss_weight: 1
+      reduction: mean
+    ]
+  ]
+  val:[
+    val_freq: 5000.0
+    save_img: False
+    metrics:[
+      psnr:[
+        type: calculate_psnr
+        crop_border: 0
+        test_y_channel: False
+      ]
+      ssim:[
+        type: calculate_ssim
+        crop_border: 0
+        test_y_channel: False
+      ]
+    ]
+  ]
+  logger:[
+    print_freq: 200
+    save_checkpoint_freq: 5000.0
+    use_tb_logger: True
+    wandb:[
+      project: None
+      resume_id: None
+    ]
+  ]
+  dist_params:[
+    backend: gloo
+    port: 4321
+  ]
+  is_train: True
+  dist: False
+  rank: 0
+  world_size: 1
+
+2023-06-08 15:37:07,316 INFO: Dataset PairedImageDataset - RestoreNet-train is created.
+2023-06-08 15:37:07,316 INFO: Training statistics:
+	Number of train images: 19978
+	Dataset enlarge ratio: 1
+	Batch size per gpu: 2
+	World size (gpu number): 1
+	Require iter number per epoch: 9989
+	Total epochs: 41; iters: 400000.
+2023-06-08 15:37:07,324 INFO: Dataset PairedImageDataset - RestoreNet-test is created.
+2023-06-08 15:37:07,325 INFO: Number of val images/folders in RestoreNet-test: 21
+2023-06-08 15:37:07,325 INFO: Set pretrain_network_g to d:\premodel\restorenet\experiments\RestoreNet-width64\models\net_g_100000.pth
+2023-06-08 15:37:12,689 INFO: Loading RestoreNetLocal model from d:\premodel\restorenet\experiments\RestoreNet-width64\models\net_g_100000.pth.
+2023-06-08 15:37:16,196 INFO: Model [ImageRestorationModel] is created.
+2023-06-08 15:37:16,777 INFO: Resuming training from epoch: 8, iter: 100000.
+2023-06-08 15:37:21,567 INFO: Start training from epoch: 8, iter: 100000
+2023-06-08 15:38:47,717 INFO: [Resto..][epoch:  8, iter: 100,200, lr:(8.530e-04,)] [eta: 1 day, 13:40:40, time (data): 0.412 (0.000)] l_pix: -2.2132e+01 
+2023-06-08 15:40:10,527 INFO: [Resto..][epoch:  8, iter: 100,400, lr:(8.525e-04,)] [eta: 1 day, 12:03:33, time (data): 0.441 (0.000)] l_pix: -2.1798e+01 
+2023-06-08 15:41:33,798 INFO: [Resto..][epoch:  8, iter: 100,600, lr:(8.519e-04,)] [eta: 1 day, 11:33:59, time (data): 0.401 (0.000)] l_pix: -2.2969e+01 
+2023-06-08 15:42:58,311 INFO: [Resto..][epoch:  8, iter: 100,800, lr:(8.513e-04,)] [eta: 1 day, 11:26:13, time (data): 0.408 (0.001)] l_pix: -2.1968e+01 
+2023-06-08 15:44:22,505 INFO: [Resto..][epoch:  8, iter: 101,000, lr:(8.508e-04,)] [eta: 1 day, 11:19:24, time (data): 0.433 (0.000)] l_pix: -2.3983e+01 
+2023-06-08 15:45:48,749 INFO: [Resto..][epoch:  8, iter: 101,200, lr:(8.502e-04,)] [eta: 1 day, 11:22:54, time (data): 0.429 (0.001)] l_pix: -2.2515e+01 
+2023-06-08 15:47:15,113 INFO: [Resto..][epoch:  8, iter: 101,400, lr:(8.497e-04,)] [eta: 1 day, 11:25:24, time (data): 0.410 (0.000)] l_pix: -2.0410e+01 
+2023-06-08 15:48:38,920 INFO: [Resto..][epoch:  8, iter: 101,600, lr:(8.491e-04,)] [eta: 1 day, 11:18:59, time (data): 0.456 (0.001)] l_pix: -2.0845e+01 
+2023-06-08 15:50:02,681 INFO: [Resto..][epoch:  8, iter: 101,800, lr:(8.485e-04,)] [eta: 1 day, 11:13:33, time (data): 0.410 (0.001)] l_pix: -2.0151e+01 
+2023-06-08 15:51:26,379 INFO: [Resto..][epoch:  8, iter: 102,000, lr:(8.480e-04,)] [eta: 1 day, 11:08:46, time (data): 0.411 (0.001)] l_pix: -2.5148e+01 
+2023-06-08 15:52:50,110 INFO: [Resto..][epoch:  8, iter: 102,200, lr:(8.474e-04,)] [eta: 1 day, 11:04:41, time (data): 0.412 (0.001)] l_pix: -2.3153e+01 
+2023-06-08 15:54:17,217 INFO: [Resto..][epoch:  8, iter: 102,400, lr:(8.468e-04,)] [eta: 1 day, 11:08:01, time (data): 0.428 (0.001)] l_pix: -2.3716e+01 
+2023-06-08 15:55:43,628 INFO: [Resto..][epoch:  8, iter: 102,600, lr:(8.463e-04,)] [eta: 1 day, 11:09:17, time (data): 0.439 (0.001)] l_pix: -2.5162e+01 
+2023-06-08 15:57:09,142 INFO: [Resto..][epoch:  8, iter: 102,800, lr:(8.457e-04,)] [eta: 1 day, 11:08:35, time (data): 0.407 (0.001)] l_pix: -2.3220e+01 
+2023-06-08 15:58:32,867 INFO: [Resto..][epoch:  8, iter: 103,000, lr:(8.451e-04,)] [eta: 1 day, 11:04:50, time (data): 0.423 (0.001)] l_pix: -2.0553e+01 
+2023-06-08 15:59:55,924 INFO: [Resto..][epoch:  8, iter: 103,200, lr:(8.446e-04,)] [eta: 1 day, 11:00:21, time (data): 0.421 (0.001)] l_pix: -2.1438e+01 
+2023-06-08 16:01:20,100 INFO: [Resto..][epoch:  8, iter: 103,400, lr:(8.440e-04,)] [eta: 1 day, 10:57:51, time (data): 0.422 (0.001)] l_pix: -3.0589e+01 
