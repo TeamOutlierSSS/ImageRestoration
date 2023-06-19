@@ -82,7 +82,7 @@ npm install
 
 
 # This will install required modules for python
-cd server/backend/python
+cd RestoreNet
 pip install -r requirements.txt
 # This will set basicsr modules for inference
 python setup.py develop --no_cuda_ext
@@ -92,7 +92,7 @@ python setup.py develop --no_cuda_ext
 
 - You can download the pretrained weight [here](https://drive.google.com/drive/folders/1vioBTsrzYxiXOEdy4NwGCzUH--Hrn6Eg)
 - You will need this pretained models for inference.
-- Put these pretained models in `server/backend/python/experiments/pretrained_models`.<br>
+- Put these pretained models in `RestoreNet/experiments/pretrained_models`.<br>
   Make directory if you cannot find folders.
 
 ### 3. Run the server

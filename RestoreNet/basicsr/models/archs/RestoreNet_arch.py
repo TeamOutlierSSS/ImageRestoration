@@ -43,7 +43,7 @@ class RestoreNet(nn.Module):
         # Supplement Module, we train these
         #self.supple = nn.Conv2d(in_channels=img_channel * 2, out_channels=width_deblur, kernel_size=3, padding=1, stride=1, groups=1,
         #                      bias=True)
-        width = int(width_deblur / 2)
+        width = int(width_deblur)
         dw_expand = int(dw_expand_deblur / 2)
         self.intro_supple = nn.Conv2d(in_channels=img_channel * 2, out_channels=width, kernel_size=3, padding=1, stride=1, groups=1,
                               bias=True)

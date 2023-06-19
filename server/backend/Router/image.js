@@ -24,11 +24,11 @@ router.post('/', upload.single('image'), async function (req, res, next) {
     let python;
     if (dimensions.height < 512 || dimensions.width < 512){
       python = spawn('python', ['basicsr/demo.py', '-opt', 'options/test/RestoreNet/RestoreNet-width64.yml', '--input_path',
-      '../public/img/' + req.file.filename, '--output_path', '../public/img/inf_' + req.file.filename], {cwd: path.join(process.cwd(), 'python')})
+      '../server/backend/public/img/' + req.file.filename, '--output_path', '../server/backend/public/img/inf_' + req.file.filename], {cwd: '../../RestoreNet'})
     }
     else{
       python = spawn('python', ['basicsr/demo.py', '-opt', 'options/test/RestoreNet/RestoreNet-width64-grid.yml', '--input_path',
-      '../public/img/' + req.file.filename, '--output_path', '../public/img/inf_' + req.file.filename], {cwd: path.join(process.cwd(), 'python')})
+      '../server/backend/public/img/' + req.file.filename, '--output_path', '../server/backend/public/img/inf_' + req.file.filename], {cwd: '../../RestoreNet'})
     }
     python.stdout.on('data', function (data) {
       console.log(data.toString())
