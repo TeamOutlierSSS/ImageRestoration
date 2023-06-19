@@ -1,30 +1,30 @@
-![header](https://capsule-render.vercel.app/api?type=soft&color=0:e66465,100:9198e5&height=120&section=header&text=Image%20Restoration&fontSize=50&animation=fadeIn&fontColor=ffffff)
+![header](https://capsule-render.vercel.app/api?type=soft&color=0:bee1e8,100:ddc7fc&height=120&section=header&text=Image%20Restoration&fontSize=50&animation=fadeIn&fontColor=192a56)
 
 <img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=flat&logo=react&logoColor=white"/> <img src="https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black"/> <img src="https://img.shields.io/badge/NodeJS-339933?style=flat&logo=nodedotjs&logoColor=white"/>
-
 <img src="https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white"/> <img src="https://img.shields.io/badge/Javascript-F7DF1E?style=flat&logo=javascript&logoColor=black"/>
 
+[📑 Presentation slide]('./docs/Presentation_RestoreNet.pdf')
 <br>
 <br>
 
-# Introduction
+## Introduction
 
 ### Background
 
 - The two tasks, Deblur and Denoise, are processed based on opposite principles.
   - In the Deblur task, the process of removing blur enhances the edges of the image, making noise more visible.
   - In the Denoise task, the process of removing noise softens the edges of the image, making them appear smoother or less defined, resembling a blur.
-- We found that there is an active research for denoising or deblurring seperately, but there are few attempts to address the issue of image deblurring and denoising of same image, which is common in real life.
+- There is an active research for denoising or deblurring seperately, but there are few attempts to address the issue of image deblurring and denoising of same image, which is common in real life.
 
-### Main features
+### Main feature
 
-- Implement a simple web server for image denoising/deblurring at the same time.
+- Implement a simple web application for image denoising/deblurring at the same time.
 
 <br>
 
-# Service Architecture
+## Service Architecture
 
-<img src="./docs/service_arch.png" alt="Service Architecture">
+<img src="./docs/service_arch.png" alt="Service Architecture" width=650>
 
 ### How does this work?
 
@@ -32,36 +32,43 @@ We made it as simple as possible, so you will only need to remember three steps.
 
 1. React frontend sends an image file to Express backend using POST.\
    For this, we use `http-proxy-middleware` to proxy between frontend and backend server.
-
 2. Backend receives the image frontend sent, and makes the model inference using `child_process`.
-
 3. After the inference, backend sends the name of the restored image, and frontend shows it to the client.
 
 <br>
 
-# Dataset
+## Dataset
 
-We generated images with both noise and blur using [DANet](https://github.com/zsyOAOA/DANet).
+- Used [DANet](https://github.com/zsyOAOA/DANet) to generate images with both noise and blur, as well as images with noise only, based on the blur datasets(BSD, GoPro, Realblur-J)
+- Created four types of images-<i>noise, blur, blur with noise(BLNO), and groundtruth</i>-through augmentation techniques for the same scenes
+- Trained with a diverse set of training datasets with various combinations
 
-### Train dataset
+1. BSD dataset only
+2. BLNO type only
+3. Combining the four types of images in various ratios [BLNO:Blur:Noise:GroundTruth]
+   - 13:2:2:1
+   - 11:4:4:1
+   - 2:1:1:1
+
+### Base dataset for training
 
 - BSD [here](https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/bsds/)
 - RealBlur-J [here](https://cg.postech.ac.kr/research/realblur/)
 - GoPro [here](https://seungjunnah.github.io/Datasets/gopro.html)
 
-### Validation / Test dataset
+### Base dataset for validation / test
 
 - RealBlur-Tele [here](https://cg.postech.ac.kr/research/realblur/)
 
 <br>
 
-# Model Architecture
+## Model Architecture
 
-<img src="./docs/model_arch.png" alt="Model Architecture">
-<br>
+<img src="./docs/model_arch.png" alt="Model Architecture" width=650>
+
 <br>
 
-# Demo
+## Demo
 
 ### 0. Requirements
 
@@ -84,6 +91,8 @@ npm install
 # This will install required modules for python
 cd RestoreNet
 pip install -r requirements.txt
+
+
 # This will set basicsr modules for inference
 python setup.py develop --no_cuda_ext
 ```
@@ -125,8 +134,6 @@ npm run start
 - Y. Park, M. Jeon, J. Lee, and M. Kang, “MCW-net: Single Image deraining with multi-level connections and wide regional non-local blocks,” Signal Processing: <i>Image Communication</i>, vol. 105, p. 116701, 2022. doi:10.1016/j.image.2022.116701
 - S. Xie, R. Girshick, P. Dollar, Z. Tu, and K. He, “Aggregated residual transformations for deep neural networks,” <i>2017 IEEE Conference on Computer Vision and Pattern Recognition (CVPR)</i>, 2017. doi:10.1109/cvpr.2017.634
 - S.loffe, and C.Szegedy, “Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift”, <i>ICML'15: Proceedings of the 32nd International Conference on International Conference on Machine Learning</i>, vol.37, pp.448-456, 2015. doi:10.48550
-
-<br>
 
 ### Code
 
