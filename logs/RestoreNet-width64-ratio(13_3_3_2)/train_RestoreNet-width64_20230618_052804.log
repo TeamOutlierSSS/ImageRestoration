@@ -1,0 +1,409 @@
+2023-06-18 05:28:04,530 INFO: 
+                ____                _       _____  ____
+               / __ ) ____ _ _____ (_)_____/ ___/ / __ \
+              / __  |/ __ `// ___// // ___/\__ \ / /_/ /
+             / /_/ // /_/ /(__  )/ // /__ ___/ // _, _/
+            /_____/ \__,_//____//_/ \___//____//_/ |_|
+     ______                   __   __                 __      __
+    / ____/____   ____   ____/ /  / /   __  __ _____ / /__   / /
+   / / __ / __ \ / __ \ / __  /  / /   / / / // ___// //_/  / /
+  / /_/ // /_/ // /_/ // /_/ /  / /___/ /_/ // /__ / /<    /_/
+  \____/ \____/ \____/ \____/  /_____/\____/ \___//_/|_|  (_)
+    
+Version Information: 
+	BasicSR: 1.2.0+386ca20
+	PyTorch: 2.0.1+cu118
+	TorchVision: 0.15.2+cu118
+2023-06-18 05:28:04,532 INFO: 
+  name: RestoreNet-width64
+  model_type: ImageRestorationModel
+  scale: 1
+  num_gpu: 1
+  manual_seed: 10
+  datasets:[
+    train:[
+      name: RestoreNet-train
+      type: PairedImageDataset
+      dataroot_lq: /content/drive/MyDrive/Data/select/ratio(13:3:3:1)/input
+      dataroot_gt: /content/drive/MyDrive/Data/select/ratio(13:3:3:1)/output
+      filename_tmpl: {}
+      io_backend:[
+        type: disk
+      ]
+      gt_size: 256
+      use_flip: True
+      use_rot: True
+      use_shuffle: True
+      num_worker_per_gpu: 2
+      batch_size_per_gpu: 2
+      dataset_enlarge_ratio: 1
+      prefetch_mode: None
+      phase: train
+      scale: 1
+    ]
+    val:[
+      name: RestoreNet-test
+      type: PairedImageDataset
+      dataroot_lq: /content/drive/MyDrive/Data/testdata/lq
+      dataroot_gt: /content/drive/MyDrive/Data/testdata/gt
+      io_backend:[
+        type: disk
+      ]
+      phase: val
+      scale: 1
+    ]
+  ]
+  network_g:[
+    type: RestoreNetLocal
+    width_deblur: 64
+    enc_blk_nums_deblur: [1, 1, 1, 28]
+    middle_blk_num_deblur: 1
+    dec_blk_nums_deblur: [1, 1, 1, 1]
+    dw_expand_deblur: 2
+    ffn_expand_deblur: 2
+    width_denoise: 64
+    enc_blk_nums_denoise: [2, 2, 4, 8]
+    middle_blk_num_denoise: 12
+    dec_blk_nums_denoise: [2, 2, 2, 2]
+    dw_expand_denoise: 2
+    ffn_expand_denoise: 2
+  ]
+  path:[
+    pretrain_network_g: None
+    strict_load_g: True
+    resume_state: experiments/RestoreNet-width64/training_states/65000.state
+    root: /content/drive/MyDrive/YJ/RestorNet-width64
+    experiments_root: /content/drive/MyDrive/YJ/RestorNet-width64/experiments/RestoreNet-width64
+    models: /content/drive/MyDrive/YJ/RestorNet-width64/experiments/RestoreNet-width64/models
+    training_states: /content/drive/MyDrive/YJ/RestorNet-width64/experiments/RestoreNet-width64/training_states
+    log: /content/drive/MyDrive/YJ/RestorNet-width64/experiments/RestoreNet-width64
+    visualization: /content/drive/MyDrive/YJ/RestorNet-width64/experiments/RestoreNet-width64/visualization
+  ]
+  train:[
+    optim_g:[
+      type: AdamW
+      lr: 0.001
+      weight_decay: 0.001
+      betas: [0.9, 0.9]
+    ]
+    scheduler:[
+      type: TrueCosineAnnealingLR
+      T_max: 400000
+      eta_min: 1e-07
+    ]
+    total_iter: 400000
+    warmup_iter: -1
+    pixel_opt:[
+      type: PSNRLoss
+      loss_weight: 1
+      reduction: mean
+    ]
+  ]
+  val:[
+    val_freq: 200.0
+    save_img: False
+    metrics:[
+      psnr:[
+        type: calculate_psnr
+        crop_border: 0
+        test_y_channel: False
+      ]
+      ssim:[
+        type: calculate_ssim
+        crop_border: 0
+        test_y_channel: False
+      ]
+    ]
+  ]
+  logger:[
+    print_freq: 200
+    save_checkpoint_freq: 5000.0
+    use_tb_logger: True
+    wandb:[
+      project: None
+      resume_id: None
+    ]
+  ]
+  dist_params:[
+    backend: gloo
+    port: 4321
+  ]
+  is_train: True
+  dist: True
+  rank: 0
+  world_size: 1
+
+2023-06-18 05:29:29,060 INFO: Dataset PairedImageDataset - RestoreNet-train is created.
+2023-06-18 05:29:29,061 INFO: Training statistics:
+	Number of train images: 28696
+	Dataset enlarge ratio: 1
+	Batch size per gpu: 2
+	World size (gpu number): 1
+	Require iter number per epoch: 14348
+	Total epochs: 28; iters: 400000.
+2023-06-18 05:29:30,214 INFO: Dataset PairedImageDataset - RestoreNet-test is created.
+2023-06-18 05:29:30,214 INFO: Number of val images/folders in RestoreNet-test: 80
+2023-06-18 05:29:30,214 INFO: Set pretrain_network_g to /content/drive/MyDrive/YJ/RestorNet-width64/experiments/RestoreNet-width64/models/net_g_65000.pth
+2023-06-18 05:29:36,415 INFO: Loading RestoreNetLocal model from /content/drive/MyDrive/YJ/RestorNet-width64/experiments/RestoreNet-width64/models/net_g_65000.pth.
+2023-06-18 05:30:09,561 INFO: Model [ImageRestorationModel] is created.
+2023-06-18 05:30:09,643 INFO: Resuming training from epoch: 3, iter: 65000.
+2023-06-18 05:30:13,883 INFO: Start training from epoch: 3, iter: 65000
+2023-06-18 05:33:01,290 INFO: [Resto..][epoch:  3, iter:  65,200, lr:(9.359e-04,)] [eta: 3 days, 7:25:05, time (data): 0.735 (0.002)] l_pix: -2.2686e+01 
+2023-06-18 05:40:06,074 INFO: Validation RestoreNet-test, 		 # psnr: 26.8136	 # ssim: 0.8380
+2023-06-18 05:40:06,076 INFO: [Resto..][epoch:  3, iter:  65,200, lr:(9.359e-04,)] m_psnr: 2.6814e+01 m_ssim: 8.3798e-01 
+2023-06-18 05:42:40,286 INFO: [Resto..][epoch:  3, iter:  65,400, lr:(9.355e-04,)] [eta: 7 days, 5:59:04, time (data): 0.742 (0.001)] l_pix: -3.3708e+01 
+2023-06-18 05:46:54,751 INFO: Validation RestoreNet-test, 		 # psnr: 26.7622	 # ssim: 0.8189
+2023-06-18 05:46:54,752 INFO: [Resto..][epoch:  3, iter:  65,400, lr:(9.355e-04,)] m_psnr: 2.6762e+01 m_ssim: 8.1895e-01 
+2023-06-18 05:49:32,877 INFO: [Resto..][epoch:  3, iter:  65,600, lr:(9.351e-04,)] [eta: 7 days, 11:47:08, time (data): 0.782 (0.061)] l_pix: -3.6805e+01 
+2023-06-18 05:53:47,082 INFO: Validation RestoreNet-test, 		 # psnr: 26.3214	 # ssim: 0.8111
+2023-06-18 05:53:47,082 INFO: [Resto..][epoch:  3, iter:  65,600, lr:(9.351e-04,)] m_psnr: 2.6321e+01 m_ssim: 8.1113e-01 
+2023-06-18 05:56:23,580 INFO: [Resto..][epoch:  3, iter:  65,800, lr:(9.347e-04,)] [eta: 7 days, 14:24:49, time (data): 1.012 (0.285)] l_pix: -4.1199e+01 
+2023-06-18 06:00:38,015 INFO: Validation RestoreNet-test, 		 # psnr: 26.5301	 # ssim: 0.8116
+2023-06-18 06:00:38,016 INFO: [Resto..][epoch:  3, iter:  65,800, lr:(9.347e-04,)] m_psnr: 2.6530e+01 m_ssim: 8.1159e-01 
+2023-06-18 06:03:12,878 INFO: [Resto..][epoch:  3, iter:  66,000, lr:(9.343e-04,)] [eta: 7 days, 15:48:56, time (data): 0.729 (0.001)] l_pix: -2.0155e+01 
+2023-06-18 06:07:26,969 INFO: Validation RestoreNet-test, 		 # psnr: 26.6042	 # ssim: 0.8184
+2023-06-18 06:07:26,970 INFO: [Resto..][epoch:  3, iter:  66,000, lr:(9.343e-04,)] m_psnr: 2.6604e+01 m_ssim: 8.1845e-01 
+2023-06-18 06:10:01,279 INFO: [Resto..][epoch:  3, iter:  66,200, lr:(9.339e-04,)] [eta: 7 days, 16:38:37, time (data): 0.734 (0.002)] l_pix: -4.4311e+01 
+2023-06-18 06:14:15,423 INFO: Validation RestoreNet-test, 		 # psnr: 25.5113	 # ssim: 0.7647
+2023-06-18 06:14:15,424 INFO: [Resto..][epoch:  3, iter:  66,200, lr:(9.339e-04,)] m_psnr: 2.5511e+01 m_ssim: 7.6466e-01 
+2023-06-18 06:16:54,119 INFO: [Resto..][epoch:  3, iter:  66,400, lr:(9.335e-04,)] [eta: 7 days, 17:29:47, time (data): 0.984 (0.256)] l_pix: -2.5991e+01 
+2023-06-18 06:21:08,745 INFO: Validation RestoreNet-test, 		 # psnr: 26.1753	 # ssim: 0.7850
+2023-06-18 06:21:08,746 INFO: [Resto..][epoch:  3, iter:  66,400, lr:(9.335e-04,)] m_psnr: 2.6175e+01 m_ssim: 7.8503e-01 
+2023-06-18 06:23:45,698 INFO: [Resto..][epoch:  3, iter:  66,600, lr:(9.332e-04,)] [eta: 7 days, 18:02:04, time (data): 0.815 (0.093)] l_pix: -1.7996e+01 
+2023-06-18 06:27:59,838 INFO: Validation RestoreNet-test, 		 # psnr: 25.8935	 # ssim: 0.7711
+2023-06-18 06:27:59,839 INFO: [Resto..][epoch:  3, iter:  66,600, lr:(9.332e-04,)] m_psnr: 2.5894e+01 m_ssim: 7.7112e-01 
+2023-06-18 06:30:38,520 INFO: [Resto..][epoch:  3, iter:  66,800, lr:(9.328e-04,)] [eta: 7 days, 18:29:30, time (data): 0.742 (0.001)] l_pix: -4.3707e+01 
+2023-06-18 06:34:52,553 INFO: Validation RestoreNet-test, 		 # psnr: 26.7904	 # ssim: 0.8303
+2023-06-18 06:34:52,554 INFO: [Resto..][epoch:  3, iter:  66,800, lr:(9.328e-04,)] m_psnr: 2.6790e+01 m_ssim: 8.3027e-01 
+2023-06-18 06:37:28,159 INFO: [Resto..][epoch:  3, iter:  67,000, lr:(9.324e-04,)] [eta: 7 days, 18:41:14, time (data): 0.744 (0.001)] l_pix: -3.0377e+01 
+2023-06-18 06:41:42,313 INFO: Validation RestoreNet-test, 		 # psnr: 26.4734	 # ssim: 0.8062
+2023-06-18 06:41:42,314 INFO: [Resto..][epoch:  3, iter:  67,000, lr:(9.324e-04,)] m_psnr: 2.6473e+01 m_ssim: 8.0620e-01 
+2023-06-18 06:44:14,911 INFO: [Resto..][epoch:  3, iter:  67,200, lr:(9.320e-04,)] [eta: 7 days, 18:42:20, time (data): 0.733 (0.002)] l_pix: -2.5267e+01 
+2023-06-18 06:48:29,068 INFO: Validation RestoreNet-test, 		 # psnr: 26.2669	 # ssim: 0.7971
+2023-06-18 06:48:29,070 INFO: [Resto..][epoch:  3, iter:  67,200, lr:(9.320e-04,)] m_psnr: 2.6267e+01 m_ssim: 7.9705e-01 
+2023-06-18 06:51:59,999 INFO: [Resto..][epoch:  3, iter:  67,400, lr:(9.316e-04,)] [eta: 7 days, 20:56:47, time (data): 0.749 (0.003)] l_pix: -3.7939e+01 
+2023-06-18 06:56:14,079 INFO: Validation RestoreNet-test, 		 # psnr: 26.7636	 # ssim: 0.8251
+2023-06-18 06:56:14,079 INFO: [Resto..][epoch:  3, iter:  67,400, lr:(9.316e-04,)] m_psnr: 2.6764e+01 m_ssim: 8.2511e-01 
+2023-06-18 06:58:49,537 INFO: [Resto..][epoch:  3, iter:  67,600, lr:(9.312e-04,)] [eta: 7 days, 20:51:04, time (data): 0.734 (0.002)] l_pix: -4.3092e+01 
+2023-06-18 07:03:03,891 INFO: Validation RestoreNet-test, 		 # psnr: 26.0090	 # ssim: 0.7812
+2023-06-18 07:03:03,892 INFO: [Resto..][epoch:  3, iter:  67,600, lr:(9.312e-04,)] m_psnr: 2.6009e+01 m_ssim: 7.8122e-01 
+2023-06-18 07:05:42,495 INFO: [Resto..][epoch:  3, iter:  67,800, lr:(9.308e-04,)] [eta: 7 days, 20:51:56, time (data): 0.750 (0.001)] l_pix: -3.7621e+01 
+2023-06-18 07:09:56,496 INFO: Validation RestoreNet-test, 		 # psnr: 26.4919	 # ssim: 0.8071
+2023-06-18 07:09:56,496 INFO: [Resto..][epoch:  3, iter:  67,800, lr:(9.308e-04,)] m_psnr: 2.6492e+01 m_ssim: 8.0707e-01 
+2023-06-18 07:12:33,817 INFO: [Resto..][epoch:  3, iter:  68,000, lr:(9.304e-04,)] [eta: 7 days, 20:48:46, time (data): 0.746 (0.002)] l_pix: -2.6242e+01 
+2023-06-18 07:16:48,168 INFO: Validation RestoreNet-test, 		 # psnr: 26.3901	 # ssim: 0.8011
+2023-06-18 07:16:48,168 INFO: [Resto..][epoch:  3, iter:  68,000, lr:(9.304e-04,)] m_psnr: 2.6390e+01 m_ssim: 8.0107e-01 
+2023-06-18 07:19:29,132 INFO: [Resto..][epoch:  3, iter:  68,200, lr:(9.300e-04,)] [eta: 7 days, 20:52:02, time (data): 0.776 (0.055)] l_pix: -2.2654e+01 
+2023-06-18 07:23:43,457 INFO: Validation RestoreNet-test, 		 # psnr: 25.9015	 # ssim: 0.7807
+2023-06-18 07:23:43,458 INFO: [Resto..][epoch:  3, iter:  68,200, lr:(9.300e-04,)] m_psnr: 2.5901e+01 m_ssim: 7.8070e-01 
+2023-06-18 07:26:24,246 INFO: [Resto..][epoch:  3, iter:  68,400, lr:(9.296e-04,)] [eta: 7 days, 20:53:46, time (data): 0.732 (0.001)] l_pix: -2.4255e+01 
+2023-06-18 07:30:38,356 INFO: Validation RestoreNet-test, 		 # psnr: 26.5646	 # ssim: 0.8138
+2023-06-18 07:30:38,357 INFO: [Resto..][epoch:  3, iter:  68,400, lr:(9.296e-04,)] m_psnr: 2.6565e+01 m_ssim: 8.1380e-01 
+2023-06-18 07:33:21,444 INFO: [Resto..][epoch:  3, iter:  68,600, lr:(9.292e-04,)] [eta: 7 days, 20:57:45, time (data): 0.745 (0.023)] l_pix: -2.3937e+01 
+2023-06-18 07:37:35,460 INFO: Validation RestoreNet-test, 		 # psnr: 26.8171	 # ssim: 0.8281
+2023-06-18 07:37:35,460 INFO: [Resto..][epoch:  3, iter:  68,600, lr:(9.292e-04,)] m_psnr: 2.6817e+01 m_ssim: 8.2812e-01 
+2023-06-18 07:40:17,662 INFO: [Resto..][epoch:  3, iter:  68,800, lr:(9.288e-04,)] [eta: 7 days, 20:59:09, time (data): 1.299 (0.575)] l_pix: -2.3230e+01 
+2023-06-18 07:44:31,808 INFO: Validation RestoreNet-test, 		 # psnr: 26.8629	 # ssim: 0.8326
+2023-06-18 07:44:31,808 INFO: [Resto..][epoch:  3, iter:  68,800, lr:(9.288e-04,)] m_psnr: 2.6863e+01 m_ssim: 8.3264e-01 
+2023-06-18 07:47:13,163 INFO: [Resto..][epoch:  3, iter:  69,000, lr:(9.284e-04,)] [eta: 7 days, 20:58:44, time (data): 0.748 (0.019)] l_pix: -3.7113e+01 
+2023-06-18 07:51:27,411 INFO: Validation RestoreNet-test, 		 # psnr: 26.6035	 # ssim: 0.8289
+2023-06-18 07:51:27,412 INFO: [Resto..][epoch:  3, iter:  69,000, lr:(9.284e-04,)] m_psnr: 2.6603e+01 m_ssim: 8.2891e-01 
+2023-06-18 07:54:08,606 INFO: [Resto..][epoch:  3, iter:  69,200, lr:(9.280e-04,)] [eta: 7 days, 20:57:37, time (data): 0.746 (0.001)] l_pix: -2.3286e+01 
+2023-06-18 07:58:22,718 INFO: Validation RestoreNet-test, 		 # psnr: 26.2431	 # ssim: 0.8006
+2023-06-18 07:58:22,719 INFO: [Resto..][epoch:  3, iter:  69,200, lr:(9.280e-04,)] m_psnr: 2.6243e+01 m_ssim: 8.0060e-01 
+2023-06-18 08:01:00,409 INFO: [Resto..][epoch:  3, iter:  69,400, lr:(9.276e-04,)] [eta: 7 days, 20:51:25, time (data): 0.750 (0.001)] l_pix: -2.8342e+01 
+2023-06-18 08:05:14,589 INFO: Validation RestoreNet-test, 		 # psnr: 26.6815	 # ssim: 0.8331
+2023-06-18 08:05:14,589 INFO: [Resto..][epoch:  3, iter:  69,400, lr:(9.276e-04,)] m_psnr: 2.6682e+01 m_ssim: 8.3312e-01 
+2023-06-18 08:07:51,922 INFO: [Resto..][epoch:  3, iter:  69,600, lr:(9.271e-04,)] [eta: 7 days, 20:44:48, time (data): 0.742 (0.001)] l_pix: -4.2495e+01 
+2023-06-18 08:12:06,022 INFO: Validation RestoreNet-test, 		 # psnr: 26.8172	 # ssim: 0.8330
+2023-06-18 08:12:06,023 INFO: [Resto..][epoch:  3, iter:  69,600, lr:(9.271e-04,)] m_psnr: 2.6817e+01 m_ssim: 8.3300e-01 
+2023-06-18 08:14:45,565 INFO: [Resto..][epoch:  3, iter:  69,800, lr:(9.267e-04,)] [eta: 7 days, 20:40:37, time (data): 0.771 (0.045)] l_pix: -5.7776e+01 
+2023-06-18 08:19:00,016 INFO: Validation RestoreNet-test, 		 # psnr: 26.8421	 # ssim: 0.8296
+2023-06-18 08:19:00,017 INFO: [Resto..][epoch:  3, iter:  69,800, lr:(9.267e-04,)] m_psnr: 2.6842e+01 m_ssim: 8.2961e-01 
+2023-06-18 08:21:38,473 INFO: [Resto..][epoch:  3, iter:  70,000, lr:(9.263e-04,)] [eta: 7 days, 20:35:24, time (data): 0.728 (0.001)] l_pix: -2.8497e+01 
+2023-06-18 08:21:38,474 INFO: Saving models and training states.
+2023-06-18 08:25:56,681 INFO: Validation RestoreNet-test, 		 # psnr: 26.2800	 # ssim: 0.7951
+2023-06-18 08:25:56,682 INFO: [Resto..][epoch:  3, iter:  70,000, lr:(9.263e-04,)] m_psnr: 2.6280e+01 m_ssim: 7.9511e-01 
+2023-06-18 08:28:35,426 INFO: [Resto..][epoch:  3, iter:  70,200, lr:(9.259e-04,)] [eta: 7 days, 20:34:21, time (data): 0.728 (0.001)] l_pix: -4.1224e+01 
+2023-06-18 08:32:49,790 INFO: Validation RestoreNet-test, 		 # psnr: 26.2948	 # ssim: 0.8067
+2023-06-18 08:32:49,791 INFO: [Resto..][epoch:  3, iter:  70,200, lr:(9.259e-04,)] m_psnr: 2.6295e+01 m_ssim: 8.0669e-01 
+2023-06-18 08:35:29,658 INFO: [Resto..][epoch:  3, iter:  70,400, lr:(9.255e-04,)] [eta: 7 days, 20:30:05, time (data): 0.739 (0.002)] l_pix: -3.9225e+01 
+2023-06-18 08:39:44,108 INFO: Validation RestoreNet-test, 		 # psnr: 26.8826	 # ssim: 0.8341
+2023-06-18 08:39:44,109 INFO: [Resto..][epoch:  3, iter:  70,400, lr:(9.255e-04,)] m_psnr: 2.6883e+01 m_ssim: 8.3411e-01 
+2023-06-18 08:42:22,062 INFO: [Resto..][epoch:  3, iter:  70,600, lr:(9.251e-04,)] [eta: 7 days, 20:23:50, time (data): 0.839 (0.120)] l_pix: -2.2138e+01 
+2023-06-18 08:46:36,672 INFO: Validation RestoreNet-test, 		 # psnr: 25.9384	 # ssim: 0.7807
+2023-06-18 08:46:36,672 INFO: [Resto..][epoch:  3, iter:  70,600, lr:(9.251e-04,)] m_psnr: 2.5938e+01 m_ssim: 7.8066e-01 
+2023-06-18 08:49:17,296 INFO: [Resto..][epoch:  3, iter:  70,800, lr:(9.247e-04,)] [eta: 7 days, 20:20:13, time (data): 0.752 (0.028)] l_pix: -4.5078e+01 
+2023-06-18 08:53:31,494 INFO: Validation RestoreNet-test, 		 # psnr: 26.7423	 # ssim: 0.8246
+2023-06-18 08:53:31,495 INFO: [Resto..][epoch:  3, iter:  70,800, lr:(9.247e-04,)] m_psnr: 2.6742e+01 m_ssim: 8.2459e-01 
+2023-06-18 08:56:08,810 INFO: [Resto..][epoch:  3, iter:  71,000, lr:(9.243e-04,)] [eta: 7 days, 20:12:59, time (data): 0.773 (0.051)] l_pix: -2.5509e+01 
+2023-06-18 09:00:22,280 INFO: Validation RestoreNet-test, 		 # psnr: 25.7108	 # ssim: 0.7879
+2023-06-18 09:00:22,281 INFO: [Resto..][epoch:  3, iter:  71,000, lr:(9.243e-04,)] m_psnr: 2.5711e+01 m_ssim: 7.8794e-01 
+2023-06-18 09:03:01,242 INFO: [Resto..][epoch:  3, iter:  71,200, lr:(9.238e-04,)] [eta: 7 days, 20:06:35, time (data): 1.167 (0.446)] l_pix: -4.8839e+01 
+2023-06-18 09:07:15,407 INFO: Validation RestoreNet-test, 		 # psnr: 26.7966	 # ssim: 0.8305
+2023-06-18 09:07:15,409 INFO: [Resto..][epoch:  3, iter:  71,200, lr:(9.238e-04,)] m_psnr: 2.6797e+01 m_ssim: 8.3045e-01 
+2023-06-18 09:09:55,959 INFO: [Resto..][epoch:  3, iter:  71,400, lr:(9.234e-04,)] [eta: 7 days, 20:02:07, time (data): 0.907 (0.184)] l_pix: -1.6238e+01 
+2023-06-18 09:14:10,092 INFO: Validation RestoreNet-test, 		 # psnr: 25.2622	 # ssim: 0.7566
+2023-06-18 09:14:10,093 INFO: [Resto..][epoch:  3, iter:  71,400, lr:(9.234e-04,)] m_psnr: 2.5262e+01 m_ssim: 7.5662e-01 
+2023-06-18 09:16:47,727 INFO: [Resto..][epoch:  3, iter:  71,600, lr:(9.230e-04,)] [eta: 7 days, 19:55:03, time (data): 0.746 (0.002)] l_pix: -2.3358e+01 
+2023-06-18 09:21:01,330 INFO: Validation RestoreNet-test, 		 # psnr: 26.8685	 # ssim: 0.8386
+2023-06-18 09:21:01,331 INFO: [Resto..][epoch:  3, iter:  71,600, lr:(9.230e-04,)] m_psnr: 2.6868e+01 m_ssim: 8.3862e-01 
+2023-06-18 09:23:45,491 INFO: [Resto..][epoch:  3, iter:  71,800, lr:(9.226e-04,)] [eta: 7 days, 19:52:49, time (data): 0.735 (0.002)] l_pix: -5.5389e+01 
+2023-06-18 09:27:59,467 INFO: Validation RestoreNet-test, 		 # psnr: 26.4566	 # ssim: 0.8108
+2023-06-18 09:27:59,468 INFO: [Resto..][epoch:  3, iter:  71,800, lr:(9.226e-04,)] m_psnr: 2.6457e+01 m_ssim: 8.1078e-01 
+2023-06-18 09:30:42,648 INFO: [Resto..][epoch:  3, iter:  72,000, lr:(9.222e-04,)] [eta: 7 days, 19:49:50, time (data): 0.740 (0.001)] l_pix: -4.1433e+01 
+2023-06-18 09:34:55,844 INFO: Validation RestoreNet-test, 		 # psnr: 26.6685	 # ssim: 0.8254
+2023-06-18 09:34:55,845 INFO: [Resto..][epoch:  3, iter:  72,000, lr:(9.222e-04,)] m_psnr: 2.6668e+01 m_ssim: 8.2545e-01 
+2023-06-18 09:37:34,248 INFO: [Resto..][epoch:  3, iter:  72,200, lr:(9.218e-04,)] [eta: 7 days, 19:42:25, time (data): 0.730 (0.003)] l_pix: -1.9866e+01 
+2023-06-18 09:41:48,509 INFO: Validation RestoreNet-test, 		 # psnr: 26.8421	 # ssim: 0.8355
+2023-06-18 09:41:48,509 INFO: [Resto..][epoch:  3, iter:  72,200, lr:(9.218e-04,)] m_psnr: 2.6842e+01 m_ssim: 8.3552e-01 
+2023-06-18 09:44:26,483 INFO: [Resto..][epoch:  3, iter:  72,400, lr:(9.213e-04,)] [eta: 7 days, 19:35:31, time (data): 0.747 (0.001)] l_pix: -3.5523e+01 
+2023-06-18 09:48:41,274 INFO: Validation RestoreNet-test, 		 # psnr: 26.2754	 # ssim: 0.7905
+2023-06-18 09:48:41,275 INFO: [Resto..][epoch:  3, iter:  72,400, lr:(9.213e-04,)] m_psnr: 2.6275e+01 m_ssim: 7.9045e-01 
+2023-06-18 09:51:17,043 INFO: [Resto..][epoch:  3, iter:  72,600, lr:(9.209e-04,)] [eta: 7 days, 19:27:24, time (data): 0.744 (0.001)] l_pix: -1.8417e+01 
+2023-06-18 09:55:31,463 INFO: Validation RestoreNet-test, 		 # psnr: 25.7728	 # ssim: 0.7738
+2023-06-18 09:55:31,464 INFO: [Resto..][epoch:  3, iter:  72,600, lr:(9.209e-04,)] m_psnr: 2.5773e+01 m_ssim: 7.7384e-01 
+2023-06-18 09:58:07,004 INFO: [Resto..][epoch:  3, iter:  72,800, lr:(9.205e-04,)] [eta: 7 days, 19:18:56, time (data): 0.750 (0.001)] l_pix: -3.5768e+01 
+2023-06-18 10:02:21,473 INFO: Validation RestoreNet-test, 		 # psnr: 26.5654	 # ssim: 0.8224
+2023-06-18 10:02:21,473 INFO: [Resto..][epoch:  3, iter:  72,800, lr:(9.205e-04,)] m_psnr: 2.6565e+01 m_ssim: 8.2239e-01 
+2023-06-18 10:04:57,224 INFO: [Resto..][epoch:  3, iter:  73,000, lr:(9.201e-04,)] [eta: 7 days, 19:10:43, time (data): 0.729 (0.001)] l_pix: -2.0843e+01 
+2023-06-18 10:09:11,672 INFO: Validation RestoreNet-test, 		 # psnr: 26.3708	 # ssim: 0.7961
+2023-06-18 10:09:11,673 INFO: [Resto..][epoch:  3, iter:  73,000, lr:(9.201e-04,)] m_psnr: 2.6371e+01 m_ssim: 7.9613e-01 
+2023-06-18 10:11:45,527 INFO: [Resto..][epoch:  3, iter:  73,200, lr:(9.196e-04,)] [eta: 7 days, 19:01:18, time (data): 0.730 (0.001)] l_pix: -2.3106e+01 
+2023-06-18 10:15:59,887 INFO: Validation RestoreNet-test, 		 # psnr: 26.8615	 # ssim: 0.8327
+2023-06-18 10:15:59,888 INFO: [Resto..][epoch:  3, iter:  73,200, lr:(9.196e-04,)] m_psnr: 2.6862e+01 m_ssim: 8.3266e-01 
+2023-06-18 10:18:34,414 INFO: [Resto..][epoch:  3, iter:  73,400, lr:(9.192e-04,)] [eta: 7 days, 18:52:23, time (data): 0.727 (0.001)] l_pix: -2.5304e+01 
+2023-06-18 10:22:48,853 INFO: Validation RestoreNet-test, 		 # psnr: 26.7125	 # ssim: 0.8258
+2023-06-18 10:22:48,854 INFO: [Resto..][epoch:  3, iter:  73,400, lr:(9.192e-04,)] m_psnr: 2.6712e+01 m_ssim: 8.2580e-01 
+2023-06-18 10:25:24,940 INFO: [Resto..][epoch:  3, iter:  73,600, lr:(9.188e-04,)] [eta: 7 days, 18:44:37, time (data): 0.752 (0.001)] l_pix: -1.9553e+01 
+2023-06-18 10:29:40,446 INFO: Validation RestoreNet-test, 		 # psnr: 26.6554	 # ssim: 0.8153
+2023-06-18 10:29:40,447 INFO: [Resto..][epoch:  3, iter:  73,600, lr:(9.188e-04,)] m_psnr: 2.6655e+01 m_ssim: 8.1535e-01 
+2023-06-18 10:32:17,955 INFO: [Resto..][epoch:  3, iter:  73,800, lr:(9.183e-04,)] [eta: 7 days, 18:38:25, time (data): 0.734 (0.002)] l_pix: -3.8925e+01 
+2023-06-18 10:36:32,374 INFO: Validation RestoreNet-test, 		 # psnr: 26.8746	 # ssim: 0.8312
+2023-06-18 10:36:32,374 INFO: [Resto..][epoch:  3, iter:  73,800, lr:(9.183e-04,)] m_psnr: 2.6875e+01 m_ssim: 8.3116e-01 
+2023-06-18 10:39:06,014 INFO: [Resto..][epoch:  3, iter:  74,000, lr:(9.179e-04,)] [eta: 7 days, 18:29:11, time (data): 0.732 (0.002)] l_pix: -3.4455e+01 
+2023-06-18 10:43:20,387 INFO: Validation RestoreNet-test, 		 # psnr: 26.8336	 # ssim: 0.8339
+2023-06-18 10:43:20,388 INFO: [Resto..][epoch:  3, iter:  74,000, lr:(9.179e-04,)] m_psnr: 2.6834e+01 m_ssim: 8.3385e-01 
+2023-06-18 10:45:51,994 INFO: [Resto..][epoch:  3, iter:  74,200, lr:(9.175e-04,)] [eta: 7 days, 18:18:51, time (data): 0.748 (0.001)] l_pix: -6.0754e+01 
+2023-06-18 10:50:06,053 INFO: Validation RestoreNet-test, 		 # psnr: 25.5625	 # ssim: 0.7647
+2023-06-18 10:50:06,053 INFO: [Resto..][epoch:  3, iter:  74,200, lr:(9.175e-04,)] m_psnr: 2.5563e+01 m_ssim: 7.6474e-01 
+2023-06-18 10:52:43,480 INFO: [Resto..][epoch:  3, iter:  74,400, lr:(9.170e-04,)] [eta: 7 days, 18:11:50, time (data): 0.742 (0.001)] l_pix: -4.8446e+01 
+2023-06-18 10:56:57,667 INFO: Validation RestoreNet-test, 		 # psnr: 26.5917	 # ssim: 0.8158
+2023-06-18 10:56:57,667 INFO: [Resto..][epoch:  3, iter:  74,400, lr:(9.170e-04,)] m_psnr: 2.6592e+01 m_ssim: 8.1580e-01 
+2023-06-18 10:59:31,019 INFO: [Resto..][epoch:  3, iter:  74,600, lr:(9.166e-04,)] [eta: 7 days, 18:02:36, time (data): 0.732 (0.002)] l_pix: -1.6983e+01 
+2023-06-18 11:03:45,325 INFO: Validation RestoreNet-test, 		 # psnr: 25.5638	 # ssim: 0.7571
+2023-06-18 11:03:45,326 INFO: [Resto..][epoch:  3, iter:  74,600, lr:(9.166e-04,)] m_psnr: 2.5564e+01 m_ssim: 7.5707e-01 
+2023-06-18 11:06:20,579 INFO: [Resto..][epoch:  3, iter:  74,800, lr:(9.162e-04,)] [eta: 7 days, 17:54:35, time (data): 0.733 (0.001)] l_pix: -6.0485e+01 
+2023-06-18 11:10:34,940 INFO: Validation RestoreNet-test, 		 # psnr: 26.4214	 # ssim: 0.8147
+2023-06-18 11:10:34,942 INFO: [Resto..][epoch:  3, iter:  74,800, lr:(9.162e-04,)] m_psnr: 2.6421e+01 m_ssim: 8.1472e-01 
+2023-06-18 11:13:10,652 INFO: [Resto..][epoch:  3, iter:  75,000, lr:(9.157e-04,)] [eta: 7 days, 17:46:53, time (data): 0.734 (0.001)] l_pix: -3.5585e+01 
+2023-06-18 11:13:10,653 INFO: Saving models and training states.
+2023-06-18 11:17:29,134 INFO: Validation RestoreNet-test, 		 # psnr: 25.9924	 # ssim: 0.7840
+2023-06-18 11:17:29,135 INFO: [Resto..][epoch:  3, iter:  75,000, lr:(9.157e-04,)] m_psnr: 2.5992e+01 m_ssim: 7.8399e-01 
+2023-06-18 11:20:04,319 INFO: [Resto..][epoch:  3, iter:  75,200, lr:(9.153e-04,)] [eta: 7 days, 17:41:08, time (data): 0.731 (0.001)] l_pix: -2.0712e+01 
+2023-06-18 11:24:17,653 INFO: Validation RestoreNet-test, 		 # psnr: 26.8835	 # ssim: 0.8339
+2023-06-18 11:24:17,654 INFO: [Resto..][epoch:  3, iter:  75,200, lr:(9.153e-04,)] m_psnr: 2.6884e+01 m_ssim: 8.3393e-01 
+2023-06-18 11:26:52,055 INFO: [Resto..][epoch:  3, iter:  75,400, lr:(9.149e-04,)] [eta: 7 days, 17:32:15, time (data): 0.730 (0.002)] l_pix: -4.2724e+01 
+2023-06-18 11:31:06,184 INFO: Validation RestoreNet-test, 		 # psnr: 26.6796	 # ssim: 0.8148
+2023-06-18 11:31:06,185 INFO: [Resto..][epoch:  3, iter:  75,400, lr:(9.149e-04,)] m_psnr: 2.6680e+01 m_ssim: 8.1475e-01 
+2023-06-18 11:33:43,922 INFO: [Resto..][epoch:  3, iter:  75,600, lr:(9.144e-04,)] [eta: 7 days, 17:25:34, time (data): 0.744 (0.001)] l_pix: -3.8903e+01 
+2023-06-18 11:37:57,058 INFO: Validation RestoreNet-test, 		 # psnr: 26.7119	 # ssim: 0.8192
+2023-06-18 11:37:57,059 INFO: [Resto..][epoch:  3, iter:  75,600, lr:(9.144e-04,)] m_psnr: 2.6712e+01 m_ssim: 8.1924e-01 
+2023-06-18 11:40:31,092 INFO: [Resto..][epoch:  3, iter:  75,800, lr:(9.140e-04,)] [eta: 7 days, 17:16:31, time (data): 0.732 (0.001)] l_pix: -4.2805e+01 
+2023-06-18 11:44:45,005 INFO: Validation RestoreNet-test, 		 # psnr: 25.9425	 # ssim: 0.7786
+2023-06-18 11:44:45,006 INFO: [Resto..][epoch:  3, iter:  75,800, lr:(9.140e-04,)] m_psnr: 2.5943e+01 m_ssim: 7.7858e-01 
+2023-06-18 11:47:23,112 INFO: [Resto..][epoch:  3, iter:  76,000, lr:(9.136e-04,)] [eta: 7 days, 17:09:55, time (data): 0.737 (0.001)] l_pix: -2.6679e+01 
+2023-06-18 11:51:37,143 INFO: Validation RestoreNet-test, 		 # psnr: 26.7514	 # ssim: 0.8318
+2023-06-18 11:51:37,143 INFO: [Resto..][epoch:  3, iter:  76,000, lr:(9.136e-04,)] m_psnr: 2.6751e+01 m_ssim: 8.3177e-01 
+2023-06-18 11:54:12,038 INFO: [Resto..][epoch:  3, iter:  76,200, lr:(9.131e-04,)] [eta: 7 days, 17:01:50, time (data): 0.744 (0.002)] l_pix: -2.4678e+01 
+2023-06-18 11:58:26,319 INFO: Validation RestoreNet-test, 		 # psnr: 26.4320	 # ssim: 0.8024
+2023-06-18 11:58:26,319 INFO: [Resto..][epoch:  3, iter:  76,200, lr:(9.131e-04,)] m_psnr: 2.6432e+01 m_ssim: 8.0243e-01 
+2023-06-18 12:01:04,506 INFO: [Resto..][epoch:  3, iter:  76,400, lr:(9.127e-04,)] [eta: 7 days, 16:55:28, time (data): 0.742 (0.001)] l_pix: -2.3171e+01 
+2023-06-18 12:05:18,611 INFO: Validation RestoreNet-test, 		 # psnr: 25.5319	 # ssim: 0.7724
+2023-06-18 12:05:18,613 INFO: [Resto..][epoch:  3, iter:  76,400, lr:(9.127e-04,)] m_psnr: 2.5532e+01 m_ssim: 7.7244e-01 
+2023-06-18 12:07:53,787 INFO: [Resto..][epoch:  3, iter:  76,600, lr:(9.122e-04,)] [eta: 7 days, 16:47:36, time (data): 0.733 (0.003)] l_pix: -3.9644e+01 
+2023-06-18 12:12:07,975 INFO: Validation RestoreNet-test, 		 # psnr: 26.1316	 # ssim: 0.7862
+2023-06-18 12:12:07,976 INFO: [Resto..][epoch:  3, iter:  76,600, lr:(9.122e-04,)] m_psnr: 2.6132e+01 m_ssim: 7.8620e-01 
+2023-06-18 12:14:44,130 INFO: [Resto..][epoch:  3, iter:  76,800, lr:(9.118e-04,)] [eta: 7 days, 16:40:15, time (data): 0.736 (0.003)] l_pix: -2.0672e+01 
+2023-06-18 12:18:58,335 INFO: Validation RestoreNet-test, 		 # psnr: 26.4632	 # ssim: 0.8093
+2023-06-18 12:18:58,336 INFO: [Resto..][epoch:  3, iter:  76,800, lr:(9.118e-04,)] m_psnr: 2.6463e+01 m_ssim: 8.0931e-01 
+2023-06-18 12:21:40,943 INFO: [Resto..][epoch:  3, iter:  77,000, lr:(9.113e-04,)] [eta: 7 days, 16:35:50, time (data): 0.747 (0.002)] l_pix: -3.0734e+01 
+2023-06-18 12:25:55,387 INFO: Validation RestoreNet-test, 		 # psnr: 26.7936	 # ssim: 0.8270
+2023-06-18 12:25:55,388 INFO: [Resto..][epoch:  3, iter:  77,000, lr:(9.113e-04,)] m_psnr: 2.6794e+01 m_ssim: 8.2700e-01 
+2023-06-18 12:28:29,950 INFO: [Resto..][epoch:  3, iter:  77,200, lr:(9.109e-04,)] [eta: 7 days, 16:27:52, time (data): 0.735 (0.002)] l_pix: -2.7125e+01 
+2023-06-18 12:32:44,256 INFO: Validation RestoreNet-test, 		 # psnr: 26.9003	 # ssim: 0.8346
+2023-06-18 12:32:44,256 INFO: [Resto..][epoch:  3, iter:  77,200, lr:(9.109e-04,)] m_psnr: 2.6900e+01 m_ssim: 8.3461e-01 
+2023-06-18 12:35:18,813 INFO: [Resto..][epoch:  3, iter:  77,400, lr:(9.104e-04,)] [eta: 7 days, 16:19:54, time (data): 0.743 (0.001)] l_pix: -3.8731e+01 
+2023-06-18 12:39:32,996 INFO: Validation RestoreNet-test, 		 # psnr: 26.8301	 # ssim: 0.8422
+2023-06-18 12:39:32,997 INFO: [Resto..][epoch:  3, iter:  77,400, lr:(9.104e-04,)] m_psnr: 2.6830e+01 m_ssim: 8.4216e-01 
+2023-06-18 12:42:05,598 INFO: [Resto..][epoch:  3, iter:  77,600, lr:(9.100e-04,)] [eta: 7 days, 16:11:04, time (data): 0.731 (0.002)] l_pix: -1.9631e+01 
+2023-06-18 12:46:19,605 INFO: Validation RestoreNet-test, 		 # psnr: 27.0094	 # ssim: 0.8413
+2023-06-18 12:46:19,606 INFO: [Resto..][epoch:  3, iter:  77,600, lr:(9.100e-04,)] m_psnr: 2.7009e+01 m_ssim: 8.4126e-01 
+2023-06-18 12:48:54,791 INFO: [Resto..][epoch:  3, iter:  77,800, lr:(9.095e-04,)] [eta: 7 days, 16:03:19, time (data): 0.747 (0.015)] l_pix: -3.9160e+01 
+2023-06-18 12:53:08,772 INFO: Validation RestoreNet-test, 		 # psnr: 26.4687	 # ssim: 0.8059
+2023-06-18 12:53:08,773 INFO: [Resto..][epoch:  3, iter:  77,800, lr:(9.095e-04,)] m_psnr: 2.6469e+01 m_ssim: 8.0590e-01 
+2023-06-18 12:55:44,236 INFO: [Resto..][epoch:  3, iter:  78,000, lr:(9.091e-04,)] [eta: 7 days, 15:55:42, time (data): 0.751 (0.002)] l_pix: -2.5629e+01 
+2023-06-18 12:59:58,545 INFO: Validation RestoreNet-test, 		 # psnr: 26.8921	 # ssim: 0.8359
+2023-06-18 12:59:58,546 INFO: [Resto..][epoch:  3, iter:  78,000, lr:(9.091e-04,)] m_psnr: 2.6892e+01 m_ssim: 8.3594e-01 
+2023-06-18 13:02:34,762 INFO: [Resto..][epoch:  3, iter:  78,200, lr:(9.086e-04,)] [eta: 7 days, 15:48:32, time (data): 0.728 (0.001)] l_pix: -3.9377e+01 
+2023-06-18 13:06:48,864 INFO: Validation RestoreNet-test, 		 # psnr: 26.5535	 # ssim: 0.8117
+2023-06-18 13:06:48,865 INFO: [Resto..][epoch:  3, iter:  78,200, lr:(9.086e-04,)] m_psnr: 2.6554e+01 m_ssim: 8.1171e-01 
+2023-06-18 13:09:23,743 INFO: [Resto..][epoch:  3, iter:  78,400, lr:(9.082e-04,)] [eta: 7 days, 15:40:46, time (data): 0.733 (0.004)] l_pix: -4.2604e+01 
+2023-06-18 13:13:37,956 INFO: Validation RestoreNet-test, 		 # psnr: 26.5630	 # ssim: 0.8192
+2023-06-18 13:13:37,957 INFO: [Resto..][epoch:  3, iter:  78,400, lr:(9.082e-04,)] m_psnr: 2.6563e+01 m_ssim: 8.1919e-01 
+2023-06-18 13:16:14,107 INFO: [Resto..][epoch:  3, iter:  78,600, lr:(9.077e-04,)] [eta: 7 days, 15:33:35, time (data): 1.210 (0.489)] l_pix: -1.5295e+01 
+2023-06-18 13:20:28,499 INFO: Validation RestoreNet-test, 		 # psnr: 26.1594	 # ssim: 0.7900
+2023-06-18 13:20:28,500 INFO: [Resto..][epoch:  3, iter:  78,600, lr:(9.077e-04,)] m_psnr: 2.6159e+01 m_ssim: 7.8998e-01 
+2023-06-18 13:23:02,544 INFO: [Resto..][epoch:  3, iter:  78,800, lr:(9.073e-04,)] [eta: 7 days, 15:25:39, time (data): 0.727 (0.003)] l_pix: -4.0735e+01 
+2023-06-18 13:27:16,922 INFO: Validation RestoreNet-test, 		 # psnr: 26.9658	 # ssim: 0.8419
+2023-06-18 13:27:16,923 INFO: [Resto..][epoch:  3, iter:  78,800, lr:(9.073e-04,)] m_psnr: 2.6966e+01 m_ssim: 8.4191e-01 
+2023-06-18 13:29:57,254 INFO: [Resto..][epoch:  3, iter:  79,000, lr:(9.068e-04,)] [eta: 7 days, 15:20:09, time (data): 0.731 (0.002)] l_pix: -2.6002e+01 
+2023-06-18 13:34:11,490 INFO: Validation RestoreNet-test, 		 # psnr: 26.2340	 # ssim: 0.7960
+2023-06-18 13:34:11,491 INFO: [Resto..][epoch:  3, iter:  79,000, lr:(9.068e-04,)] m_psnr: 2.6234e+01 m_ssim: 7.9601e-01 
+2023-06-18 13:36:53,049 INFO: [Resto..][epoch:  3, iter:  79,200, lr:(9.064e-04,)] [eta: 7 days, 15:15:01, time (data): 0.742 (0.002)] l_pix: -3.9986e+01 
+2023-06-18 13:41:07,445 INFO: Validation RestoreNet-test, 		 # psnr: 25.8544	 # ssim: 0.7760
+2023-06-18 13:41:07,446 INFO: [Resto..][epoch:  3, iter:  79,200, lr:(9.064e-04,)] m_psnr: 2.5854e+01 m_ssim: 7.7602e-01 
+2023-06-18 13:43:40,223 INFO: [Resto..][epoch:  4, iter:  79,400, lr:(9.059e-04,)] [eta: 7 days, 15:06:38, time (data): 0.728 (0.002)] l_pix: -1.9417e+01 
+2023-06-18 13:47:54,278 INFO: Validation RestoreNet-test, 		 # psnr: 26.3626	 # ssim: 0.8036
+2023-06-18 13:47:54,279 INFO: [Resto..][epoch:  4, iter:  79,400, lr:(9.059e-04,)] m_psnr: 2.6363e+01 m_ssim: 8.0363e-01 
+2023-06-18 13:50:20,514 INFO: [Resto..][epoch:  4, iter:  79,600, lr:(9.054e-04,)] [eta: 7 days, 14:55:47, time (data): 0.737 (0.002)] l_pix: -4.0210e+01 
+2023-06-18 13:54:34,886 INFO: Validation RestoreNet-test, 		 # psnr: 25.9270	 # ssim: 0.7741
+2023-06-18 13:54:34,889 INFO: [Resto..][epoch:  4, iter:  79,600, lr:(9.054e-04,)] m_psnr: 2.5927e+01 m_ssim: 7.7408e-01 
+2023-06-18 13:57:01,242 INFO: [Resto..][epoch:  4, iter:  79,800, lr:(9.050e-04,)] [eta: 7 days, 14:45:12, time (data): 0.736 (0.002)] l_pix: -4.9582e+01 
+2023-06-18 14:01:15,661 INFO: Validation RestoreNet-test, 		 # psnr: 26.4461	 # ssim: 0.8064
+2023-06-18 14:01:15,661 INFO: [Resto..][epoch:  4, iter:  79,800, lr:(9.050e-04,)] m_psnr: 2.6446e+01 m_ssim: 8.0635e-01 
+2023-06-18 14:03:42,148 INFO: [Resto..][epoch:  4, iter:  80,000, lr:(9.045e-04,)] [eta: 7 days, 14:34:47, time (data): 0.730 (0.002)] l_pix: -1.8194e+01 
+2023-06-18 14:03:42,149 INFO: Saving models and training states.
+2023-06-18 14:08:00,885 INFO: Validation RestoreNet-test, 		 # psnr: 26.4206	 # ssim: 0.8016
+2023-06-18 14:08:00,886 INFO: [Resto..][epoch:  4, iter:  80,000, lr:(9.045e-04,)] m_psnr: 2.6421e+01 m_ssim: 8.0157e-01 
+2023-06-18 14:10:27,078 INFO: [Resto..][epoch:  4, iter:  80,200, lr:(9.041e-04,)] [eta: 7 days, 14:25:53, time (data): 0.728 (0.002)] l_pix: -1.9724e+01 
+2023-06-18 14:14:41,410 INFO: Validation RestoreNet-test, 		 # psnr: 26.2946	 # ssim: 0.7957
+2023-06-18 14:14:41,411 INFO: [Resto..][epoch:  4, iter:  80,200, lr:(9.041e-04,)] m_psnr: 2.6295e+01 m_ssim: 7.9566e-01 
+2023-06-18 14:17:09,423 INFO: [Resto..][epoch:  4, iter:  80,400, lr:(9.036e-04,)] [eta: 7 days, 14:16:08, time (data): 0.731 (0.002)] l_pix: -3.8975e+01 
+2023-06-18 14:21:22,631 INFO: Validation RestoreNet-test, 		 # psnr: 26.9314	 # ssim: 0.8354
+2023-06-18 14:21:22,632 INFO: [Resto..][epoch:  4, iter:  80,400, lr:(9.036e-04,)] m_psnr: 2.6931e+01 m_ssim: 8.3544e-01 
+2023-06-18 14:23:48,786 INFO: [Resto..][epoch:  4, iter:  80,600, lr:(9.031e-04,)] [eta: 7 days, 14:05:27, time (data): 0.727 (0.002)] l_pix: -1.6281e+01 
+2023-06-18 14:28:03,187 INFO: Validation RestoreNet-test, 		 # psnr: 26.1609	 # ssim: 0.7912
+2023-06-18 14:28:03,188 INFO: [Resto..][epoch:  4, iter:  80,600, lr:(9.031e-04,)] m_psnr: 2.6161e+01 m_ssim: 7.9116e-01 
+2023-06-18 14:30:29,523 INFO: [Resto..][epoch:  4, iter:  80,800, lr:(9.027e-04,)] [eta: 7 days, 13:55:20, time (data): 0.733 (0.002)] l_pix: -3.6001e+01 
+2023-06-18 14:34:43,804 INFO: Validation RestoreNet-test, 		 # psnr: 26.6650	 # ssim: 0.8191
+2023-06-18 14:34:43,805 INFO: [Resto..][epoch:  4, iter:  80,800, lr:(9.027e-04,)] m_psnr: 2.6665e+01 m_ssim: 8.1913e-01 
+2023-06-18 14:37:10,068 INFO: [Resto..][epoch:  4, iter:  81,000, lr:(9.022e-04,)] [eta: 7 days, 13:45:14, time (data): 0.731 (0.002)] l_pix: -2.0095e+01 
+2023-06-18 14:41:24,312 INFO: Validation RestoreNet-test, 		 # psnr: 26.9314	 # ssim: 0.8406
+2023-06-18 14:41:24,313 INFO: [Resto..][epoch:  4, iter:  81,000, lr:(9.022e-04,)] m_psnr: 2.6931e+01 m_ssim: 8.4064e-01 
+2023-06-18 14:43:50,637 INFO: [Resto..][epoch:  4, iter:  81,200, lr:(9.017e-04,)] [eta: 7 days, 13:35:13, time (data): 0.731 (0.002)] l_pix: -4.7437e+01 
+2023-06-18 14:48:04,905 INFO: Validation RestoreNet-test, 		 # psnr: 25.9055	 # ssim: 0.7724
+2023-06-18 14:48:04,905 INFO: [Resto..][epoch:  4, iter:  81,200, lr:(9.017e-04,)] m_psnr: 2.5906e+01 m_ssim: 7.7241e-01 
+2023-06-18 14:50:31,147 INFO: [Resto..][epoch:  4, iter:  81,400, lr:(9.013e-04,)] [eta: 7 days, 13:25:17, time (data): 0.731 (0.002)] l_pix: -2.7618e+01 
+2023-06-18 14:54:45,571 INFO: Validation RestoreNet-test, 		 # psnr: 26.9258	 # ssim: 0.8324
+2023-06-18 14:54:45,572 INFO: [Resto..][epoch:  4, iter:  81,400, lr:(9.013e-04,)] m_psnr: 2.6926e+01 m_ssim: 8.3238e-01 
+2023-06-18 14:57:12,054 INFO: [Resto..][epoch:  4, iter:  81,600, lr:(9.008e-04,)] [eta: 7 days, 13:15:33, time (data): 0.728 (0.002)] l_pix: -5.8227e+01 
+2023-06-18 15:01:25,494 INFO: Validation RestoreNet-test, 		 # psnr: 26.8129	 # ssim: 0.8320
+2023-06-18 15:01:25,495 INFO: [Resto..][epoch:  4, iter:  81,600, lr:(9.008e-04,)] m_psnr: 2.6813e+01 m_ssim: 8.3197e-01 
+2023-06-18 15:03:51,664 INFO: [Resto..][epoch:  4, iter:  81,800, lr:(9.003e-04,)] [eta: 7 days, 13:05:28, time (data): 0.727 (0.002)] l_pix: -3.9089e+01 
+2023-06-18 15:08:05,874 INFO: Validation RestoreNet-test, 		 # psnr: 26.3951	 # ssim: 0.7980
+2023-06-18 15:08:05,875 INFO: [Resto..][epoch:  4, iter:  81,800, lr:(9.003e-04,)] m_psnr: 2.6395e+01 m_ssim: 7.9798e-01 
+2023-06-18 15:10:32,167 INFO: [Resto..][epoch:  4, iter:  82,000, lr:(8.999e-04,)] [eta: 7 days, 12:55:45, time (data): 0.734 (0.002)] l_pix: -2.4987e+01 
+2023-06-18 15:14:46,628 INFO: Validation RestoreNet-test, 		 # psnr: 26.7122	 # ssim: 0.8218
+2023-06-18 15:14:46,628 INFO: [Resto..][epoch:  4, iter:  82,000, lr:(8.999e-04,)] m_psnr: 2.6712e+01 m_ssim: 8.2181e-01 
+2023-06-18 15:17:13,140 INFO: [Resto..][epoch:  4, iter:  82,200, lr:(8.994e-04,)] [eta: 7 days, 12:46:15, time (data): 0.733 (0.002)] l_pix: -2.8173e+01 
